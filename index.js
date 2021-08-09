@@ -10,10 +10,8 @@ let state = {
 };
 
 const formEl = document.querySelector ('#select-state-form');
-console.log("inside FormEl:", formEl);
 
 formEl.addEventListener("submit", (event) => {
-  console.log("click is working");
   event.preventDefault();
 
   const stateInput = formEl.querySelector("#select-state");
@@ -24,14 +22,14 @@ formEl.addEventListener("submit", (event) => {
   fetch(url) 
   .then ((res) => res.json())
   .then((beerState) => {
-    console.log("inside FETCH beerState: ", beerState);
+    // console.log("inside FETCH beerState: ", beerState);
   
     state.breweries = beerState;
     renderFiltersSection ()
 
     renderBreweriesList();
+    renderingFilteringByCity();
 
-    // renderAsideElement(newState);
 
   });
  formEl.reset();
@@ -75,7 +73,7 @@ function renderBreweriesList() {
   breweriesListUlEl.className = "breweries-list";
   articleEl.append(breweriesListUlEl);
   
-  console.log("here", state.breweries.length);
+  // console.log("here", state.breweries.length);
 
   for (let i = 0; i < state.breweries.length; i++) {
     stateBrew = state.breweries[i];
@@ -133,7 +131,7 @@ function renderBreweriesList() {
 }
 mainEl.append(articleEl); 
 
-console.log("articleEl:" ,articleEl);
+// console.log("articleEl:" ,articleEl);
 
 }
 
@@ -187,55 +185,51 @@ filtersAsideSectionEl.append(filterByTypeFormEl);
 }
 
 
+function renderingFilteringByCity () { 
 
-// /// need the elements for the main 
+  console.log("inside renderingFilteringByCity: ",renderingFilteringByCity);
+  const filterSection = renderFiltersSection();
+  mainEl.append(filterSection);
 
-// function renderUserResult() {
-// const filtersAsideSectionEl = document.createElement('aside')
-// filtersAsideSectionEl.className = "filters-section";
+  console.log("state brew inside renderingFilteringByCity: ", stateBrew);
 
-// mainEl.append(filtersAsideSectionEl, listSectionEL)
+  const filtersAsideSectionEl = document.querySelector(".filters-section")
+  mainEl.append(filtersAsideSectionEl);
 
-// 
 
-// const filterByCityDivEl = document.createElement ('div');
-// filterByCityDivEl.className = "filter-by-city-heading";
-// const citiesEl = document.createElement('h3');
-// citiesEl.innerText = "Cities";
-// buttonClearEl = document.createElement('button');
-// buttonClearEl.className = "clear-all-btn";
-// buttonClearEl.innerText = "clear all";
-// filterByCityDivEl.append(citiesEl, buttonClearEl);
-// filtersAsideSectionEl.append(filterByCityDivEl);
+  const filterByCityDivEl = document.createElement ('div');
+  filterByCityDivEl.className = "filter-by-city-heading";
+  const citiesEl = document.createElement('h3');
+  citiesEl.innerText = "Cities";
+  const buttonClearEl = document.createElement('button');
+  buttonClearEl.className = "clear-all-btn";
+  buttonClearEl.innerText = "clear all";
+  filterByCityDivEl.append(citiesEl, buttonClearEl);
+  filtersAsideSectionEl.append(filterByCityDivEl);
 
-// const filterByCityFormEl = document.createElement ('form');
-// filterByCityFormEl.id = "filter-by-city-form";
-// const inputChardonEl = document.createElement ('input');
-// inputChardonEl.type = "checkbox";
-// inputChardonEl.name = "chardon";
-// inputChardonEl.value = "chardon";
-// const labelChardonEl = document.createElement ("label");
-// labelChardonEl.setAttribute = ("for", "chardon");
-// labelChardonEl.innerText = "Chardon";
-// const inputCincinnatiEl = document.createElement('input');
-// inputCincinnatiEl.type = "checkbox";
-// inputCincinnatiEl.name = "cincinnati";
-// inputCincinnatiEl.value = "cincinnati";
-// const labelCincinnatiEl = document.createElement ('label');
-// labelCincinnatiEl.setAttribute = "cincinnati";
-// labelCincinnatiEl.innerText = "Cincinnati";
+// for loop to go through each city of our result options
 
-// filterByCityFormEl.append(inputChardonEl, labelChardonEl, inputCincinnatiEl, labelCincinnatiEl);
-// filtersAsideSectionEl.append(filterByCityFormEl)
+const filterByCityFormEl = document.createElement ('form');
+filterByCityFormEl.id = "filter-by-city-form";
+const inputChardonEl = document.createElement ('input');
+inputChardonEl.type = "checkbox";
+inputChardonEl.name = "chardon";
+inputChardonEl.value = "chardon";
+const labelChardonEl = document.createElement ("label");
+labelChardonEl.setAttribute = ("for", "chardon");
+labelChardonEl.innerText = "Chardon"; // stateBrew.city;
+const inputCincinnatiEl = document.createElement('input');
+inputCincinnatiEl.type = "checkbox";
+inputCincinnatiEl.name = "cincinnati";
+inputCincinnatiEl.value = "cincinnati";
+const labelCincinnatiEl = document.createElement ('label');
+labelCincinnatiEl.setAttribute = "cincinnati";
+labelCincinnatiEl.innerText = "Cincinnati";
 
-// }
+filterByCityFormEl.append(inputChardonEl, labelChardonEl, inputCincinnatiEl, labelCincinnatiEl);
+filtersAsideSectionEl.append(filterByCityFormEl);
 
-// renderUserResult()
 
-// // const listSectionEL = document.createElement("aside");
-// // listSectionEL.className = "list-section";
+}
 
-// function renderAsideList( ) {
-// }
- 
 
