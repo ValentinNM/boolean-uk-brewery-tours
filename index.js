@@ -9,37 +9,58 @@ let state = {
   }
 };
 
+
+function capitalizeFirstLetter(string) { 
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 const formEl = document.querySelector ('#select-state-form');
 
-formEl.addEventListener("submit", (event) => {
-  event.preventDefault();
+// function listenToSelectStateForm() { 
 
-  const stateInput = formEl.querySelector("#select-state");
-  console.log("stateInput: ", stateInput.value);
+  formEl.addEventListener("submit", (event) => {
+    event.preventDefault();
   
-  const url = `https://api.openbrewerydb.org/breweries?by_state=${stateInput.value}`;
-  
+    const stateInput = formEl.querySelector("#select-state");
+    // console.log("stateInput: ", stateInput.value);
+    
+    const url = `https://api.openbrewerydb.org/breweries?by_state=${stateInput.value}`;
+    
+    fetch(url) 
   fetch(url) 
-  .then ((res) => res.json())
-  .then((beerState) => {
-    // console.log("inside FETCH beerState: ", beerState);
+    fetch(url) 
+    .then ((res) => res.json())
+    .then((beerState) => {
+    
+      // state = { 
+      //   ...state,
+      //   breweries: beerState // breweriesData 
+      //   },
+
+      state.breweries = beerState;
+      console.log("Inside GET fetch: ", state);
+
+      renderFiltersSection(),
   
-    state.breweries = beerState;
-    renderFiltersSection ()
-
-    renderBreweriesList();
-    renderingFilteringByCity();
-
-
+      renderBreweriesList()
+      renderingFilteringByCity()
+  
+  
+    });
+    formEl.reset();
+    
   });
- formEl.reset();
 
-} )
+// }
+
 
 const mainEl = document.querySelector("main");
 
 
 function renderBreweriesList() {
+
+  // mainEl.innerHTML = '';
+
   console.log("Inside renderBreweriesList: ", state.breweries);
 
   const h1El = document.createElement ("h1");
@@ -73,11 +94,31 @@ function renderBreweriesList() {
   breweriesListUlEl.className = "breweries-list";
   articleEl.append(breweriesListUlEl);
   
-  // console.log("here", state.breweries.length);
+  let filteredBreweries = state.breweries; //  
+  const filters = state.filters;
 
-  for (let i = 0; i < state.breweries.length; i++) {
-    stateBrew = state.breweries[i];
-    console.log("stateBrew: ", stateBrew);
+
+  if (filters.type !== "") { 
+    filteredBreweries = state.breweries.filter(
+      (brewery) => {
+        console.log(brewery["brewery_type"], filters.type)
+        brewery["brewery_type"] === filters.type
+      }
+    );
+  }
+
+  // if (filters.city.length !== 0) {
+  //   filteredBreweries = state.breweries.filter((brewery) => 
+  //   filters.city.includes(brewery.city.toLowerCase())
+  //   );
+  // }
+   
+
+  // console.log("here", state.breweries, state.filters);
+
+  for (let i = 0; i < filteredBreweries.length; i++) {
+    stateBrew = filteredBreweries[i];
+    console.log("brewery: ", stateBrew);
     
     let breweryType = stateBrew.brewery_type;
   
@@ -92,7 +133,7 @@ function renderBreweriesList() {
   const divEL = document.createElement('div');
   divEL.innerText = stateBrew.brewery_type;
   divEL.className = "type";
-  divEL.innerText = "micro";
+  // divEL.innerText = "micro";
   breweriesListLiEl.append(divEL);
   
   const addressSection = document.createElement('section');
@@ -135,6 +176,13 @@ mainEl.append(articleEl);
 
 }
 
+
+
+// function renderSelectedFilteredInput () { 
+
+// }
+
+
 // renderBreweriesList();
 
 function renderFiltersSection () { 
@@ -161,6 +209,18 @@ filterByTypeFormEl.append(labelEl);
 const selectEl = document.createElement("select");
 selectEl.addEventListener("change", (event) => {
 
+  const filterByValueType = event.target.value;
+
+  // state = {
+  //   ... state,
+  //   filters: "new one",
+  // }
+  // console.log("Inside select listener: ", state);
+
+  state.filters.type = filterByValueType;
+  console.log("state:", state);
+
+  renderBreweriesList();
 
 });
 
@@ -184,14 +244,13 @@ filterByTypeFormEl.append(selectEl);
 filtersAsideSectionEl.append(filterByTypeFormEl);
 }
 
-
 function renderingFilteringByCity () { 
 
-  console.log("inside renderingFilteringByCity: ",renderingFilteringByCity);
+  // console.log("inside renderingFilteringByCity: ",renderingFilteringByCity);
   const filterSection = renderFiltersSection();
   mainEl.append(filterSection);
 
-  console.log("state brew inside renderingFilteringByCity: ", stateBrew);
+  // console.log("state brew inside renderingFilteringByCity: ", stateBrew);
 
   const filtersAsideSectionEl = document.querySelector(".filters-section")
   mainEl.append(filtersAsideSectionEl);
@@ -233,3 +292,8 @@ filtersAsideSectionEl.append(filterByCityFormEl);
 }
 
 
+// function main() { 
+//   listenToSelectedStateForm ();
+//   console.log("listenToSelectedStateForm", listenToSelectedStateForm);
+// }
+// main ()
